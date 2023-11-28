@@ -1,0 +1,1 @@
+To run the crawler, install Node, go to this directory in the command line and run the inital command "npm i" and after that "node index.js". If you want to start the programm a second time you just have to use the second command.
