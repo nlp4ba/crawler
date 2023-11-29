@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^1.6.2",
     "cheerio": "^1.0.0-rc.12",
-    "chefkoch-api": "^1.2.2"
+    "chefkoch-api": "^1.2.2",
+    "sqlite3": "^5.1.6"
   }
 }
