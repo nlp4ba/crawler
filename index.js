@@ -9,7 +9,7 @@ let db = new sqlite3.Database('./master_db/recipes_' + new Date() + '.db', sqlit
     console.log('Connected to the database.');
 
     db.serialize(() => {
-        db.run("CREATE TABLE recipes (link TEXT, duration TEXT, difficulty TEXT, ingredients TEXT, description TEXT)");
+        db.run("CREATE TABLE recipes (link TEXT, duration TEXT, full_duration Text, difficulty TEXT, ingredients TEXT, description TEXT)");
     });
 
     getAllCategories().then(async (categoriesDOM) => {
@@ -124,6 +124,7 @@ async function getLinksToRecipesByPageNumber(link) {
                 var regexDuration = /(\d+\s*[a-zA-Z]+)/;
                 var regexDifficulty = /\s+([a-zA-Z]+)/;
                 var duration = recipeContent('.recipe-preptime').text().match(regexDuration)[1];
+                var full_duration = recipeContent('.rds-recipe-meta > .rds-recipe-meta__badge').filter((index, element) => {return element.children[1].data.includes("Gesamtzeit")})[0].children[1].data.replace("Gesamtzeit ca. ", "").trim();
                 var difficulty = regexDifficulty.exec(recipeContent('.recipe-difficulty').text())[1];
                 var ingredientsElement = recipeContent('.ingredients > tbody > tr');
                 var ingredients = []
@@ -141,11 +142,11 @@ async function getLinksToRecipesByPageNumber(link) {
                     }
                 }
                 var description = recipeContent('body > main > article.ds-box.ds-grid-float.ds-col-12.ds-col-m-8.ds-or-3 > div:nth-child(3)').text();
-                var fullRecipeData = {link: link, duration: duration, difficulty: difficulty, ingredients: ingredients.join("; "), description: description.replace(/(\r\n|\n|\r)/gm, "").trim()};
+                var fullRecipeData = {link: link, duration: duration, full_duration: full_duration, difficulty: difficulty, ingredients: ingredients.join("; "), description: description.replace(/(\r\n|\n|\r)/gm, "").trim()};
                 allRecipies.push(fullRecipeData);
                 //Write to Database
                 console.log(fullRecipeData);
-                db.run("INSERT INTO recipes(link, duration, difficulty, ingredients, description) VALUES (?, ?, ?, ?, ?)", [link, duration, difficulty, ingredients.join("; "), description.replace(/(\r\n|\n|\r)/gm, "").trim()]);
+                db.run("INSERT INTO recipes(link, duration, full_duration, difficulty, ingredients, description) VALUES (?, ?, ?, ?, ?, ?)", [link, duration, full_duration, difficulty, ingredients.join("; "), description.replace(/(\r\n|\n|\r)/gm, "").trim()]);
                 resolve();
                 });
             }
