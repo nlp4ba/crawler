@@ -121,9 +121,8 @@ async function getLinksToRecipesByPageNumber(link) {
                 var recipeConentHTML = recipeContentResult.data;
                 var recipeContent = cheerio.load(recipeConentHTML);
 
-                var regexDuration = /(\d+\s*[a-zA-Z]+)/;
                 var regexDifficulty = /\s+([a-zA-Z]+)/;
-                var duration = recipeContent('.recipe-preptime').text().match(regexDuration)[1];
+                var duration = recipeContent('.recipe-preptime')['0'].children[1].data.trim();
                 var full_duration = recipeContent('.rds-recipe-meta > .rds-recipe-meta__badge').filter((index, element) => {return element.children[1].data.includes("Gesamtzeit")})[0].children[1].data.replace("Gesamtzeit ca. ", "").trim();
                 var difficulty = regexDifficulty.exec(recipeContent('.recipe-difficulty').text())[1];
                 var ingredientsElement = recipeContent('.ingredients > tbody > tr');
